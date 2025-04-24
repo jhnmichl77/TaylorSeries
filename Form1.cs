@@ -1,36 +1,75 @@
-﻿    using System.Text;
+﻿using System;
+using System.Text;
+using System.Windows.Forms;
+using OxyPlot;
+using OxyPlot.Series;
+using OxyPlot.WindowsForms;
 
-    namespace TaylorSeries
+namespace TaylorSeries
     {
     public partial class Form1 : Form
     {
+
         public Form1()
         {
             InitializeComponent();
             cmbFunction.SelectedItem = "e^x";
+
         }
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
             if (double.TryParse(txtA.Text, out double a) &&
-                  double.TryParse(txtX.Text, out double x) &&
-                  int.TryParse(numOrder.Value.ToString(), out int n))
+                double.TryParse(txtX.Text, out double x) &&
+                int.TryParse(numOrder.Value.ToString(), out int n))
             {
                 string selectedFunction = cmbFunction.SelectedItem.ToString();
                 string expansion = "";
 
-                switch (selectedFunction)
+                
+                var plotModel = new PlotModel { Title = "Taylor Series Approximation" };
+
+                
+                var actualSeries = new LineSeries { Title = "Actual", Color = OxyColors.Blue };
+                var taylorSeries = new LineSeries { Title = "Taylor Approximation", Color = OxyColors.Red };
+
+               
+                for (double xi = a - 2; xi <= a + 2; xi += 0.1)
                 {
-                    case "sin(x)":
-                        expansion = TaylorSinCenteredAt(x, a, n);
-                        break;
-                    case "cos(x)":
-                        expansion = TaylorCosCenteredAt(x, a, n);
-                        break;
-                    case "e^x":
-                        expansion = TaylorExpCenteredAt(x, a, n);
-                        break;
+                    double actualVal = 0;
+                    double approxVal = 0;
+
+                    switch (selectedFunction)
+                    {
+                        case "sin(x)":
+                            actualVal = Math.Sin(xi);
+                            approxVal = ApproxTaylorSin(xi, a, n);
+                            expansion = TaylorSinCenteredAt(x, a, n);
+                            break;
+                        case "cos(x)":
+                            actualVal = Math.Cos(xi);
+                            approxVal = ApproxTaylorCos(xi, a, n);
+                            expansion = TaylorCosCenteredAt(x, a, n);
+                            break;
+                        case "e^x":
+                            actualVal = Math.Exp(xi);
+                            approxVal = ApproxTaylorExp(xi, a, n);
+                            expansion = TaylorExpCenteredAt(x, a, n);
+                            break;
+                    }
+
+                    actualSeries.Points.Add(new DataPoint(xi, actualVal));
+                    taylorSeries.Points.Add(new DataPoint(xi, approxVal));
                 }
+
+                
+                plotModel.Series.Add(actualSeries);
+                plotModel.Series.Add(taylorSeries);
+
+                
+                plotView.Model = plotModel;
+
+                plotView.InvalidatePlot(true); 
 
                 txtSteps.Text = expansion;
             }
@@ -78,7 +117,10 @@
                 evaluated.AppendLine($"{sign}{term:F6}");
             }
 
-            symbolic.AppendLine($"\nEvaluated at x = {x}:sin({x}) ≈ {evaluated.ToString().Trim()}\n         ≈ {sum:F6}");
+            symbolic.AppendLine($"\nEvaluated at x = {x}:sin({x}) ≈ \n{evaluated.ToString().Trim()}\n         ≈ {sum:F6}");
+            double actual = Math.Sin(x);
+            symbolic.AppendLine($"Actual value: {actual:F6}");
+            symbolic.AppendLine($"Absolute error: {Math.Abs(actual - sum):E6}");
             return symbolic.ToString();
         }
 
@@ -105,7 +147,10 @@
                 evaluated.AppendLine($"{sign}{term:F6}");
             }
 
-            symbolic.AppendLine($"\nEvaluated at x = {x}:cos({x}) ≈ {evaluated.ToString().Trim()}\n         ≈ {sum:F6}");
+            symbolic.AppendLine($"\nEvaluated at x = {x}:cos({x}) ≈ \n{evaluated.ToString().Trim()}\n         ≈ {sum:F6}");
+            double actual = Math.Cos(x);
+            symbolic.AppendLine($"Actual value: {actual:F6}");
+            symbolic.AppendLine($"Absolute error: {Math.Abs(actual - sum):E6}");
             return symbolic.ToString();
         }
 
@@ -131,13 +176,47 @@
                 evaluated.AppendLine($"{sign}{term:F6}");
             }
 
-            symbolic.AppendLine($"\nEvaluated at x = {x}:e^{x} ≈ {evaluated.ToString().Trim()}\n         ≈ {sum:F6}");
+            symbolic.AppendLine($"\nEvaluated at x = {x}:e^{x} ≈ \n{evaluated.ToString().Trim()}\n         ≈ {sum:F6}");
+            double actual = Math.Exp(x);
+            symbolic.AppendLine($"Actual value: {actual:F6}");
+            symbolic.AppendLine($"Absolute error: {Math.Abs(actual - sum):E6}");
             return symbolic.ToString();
         }
-
-        private void numOrder_ValueChanged(object sender, EventArgs e)
+        private double ApproxTaylorSin(double x, double a, int n)
         {
+            double sum = 0;
+            for (int i = 0; i < n; i++)
+            {
+                int power = 2 * i + 1;
+                sum += Math.Pow(-1, i) * Math.Pow(x - a, power) / Factorial(power);
+            }
+            return sum;
+        }
 
+        private double ApproxTaylorCos(double x, double a, int n)
+        {
+            double sum = 0;
+            for (int i = 0; i < n; i++)
+            {
+                int power = 2 * i;
+                sum += Math.Pow(-1, i) * Math.Pow(x - a, power) / Factorial(power);
+            }
+            return sum;
+        }
+
+        private double ApproxTaylorExp(double x, double a, int n)
+        {
+            double sum = 0;
+            for (int i = 0; i < n; i++)
+            {
+                sum += Math.Pow(x - a, i) / Factorial(i);
+            }
+            return sum;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             txtX = new TextBox();
             txtA = new TextBox();
             cmbFunction = new ComboBox();
@@ -40,12 +41,14 @@
             label4 = new Label();
             label5 = new Label();
             label6 = new Label();
+            plotView = new OxyPlot.WindowsForms.PlotView();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)numOrder).BeginInit();
             SuspendLayout();
             // 
             // txtX
             // 
-            txtX.BackColor = Color.MediumSeaGreen;
+            txtX.BackColor = Color.Honeydew;
             txtX.Location = new Point(123, 280);
             txtX.Name = "txtX";
             txtX.Size = new Size(125, 27);
@@ -53,7 +56,7 @@
             // 
             // txtA
             // 
-            txtA.BackColor = Color.MediumSeaGreen;
+            txtA.BackColor = Color.Honeydew;
             txtA.Location = new Point(178, 198);
             txtA.Name = "txtA";
             txtA.Size = new Size(125, 27);
@@ -61,7 +64,7 @@
             // 
             // cmbFunction
             // 
-            cmbFunction.BackColor = Color.MediumSeaGreen;
+            cmbFunction.BackColor = Color.Honeydew;
             cmbFunction.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbFunction.FormattingEnabled = true;
             cmbFunction.Items.AddRange(new object[] { "e^x", "sin(x)", "cos(x)" });
@@ -82,20 +85,19 @@
             // 
             // numOrder
             // 
-            numOrder.BackColor = Color.MediumSeaGreen;
+            numOrder.BackColor = Color.Honeydew;
             numOrder.Location = new Point(89, 240);
             numOrder.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
             numOrder.Name = "numOrder";
             numOrder.ReadOnly = true;
             numOrder.Size = new Size(150, 27);
             numOrder.TabIndex = 4;
-            numOrder.ValueChanged += numOrder_ValueChanged;
             // 
             // txtSteps
             // 
-            txtSteps.BackColor = Color.MediumSeaGreen;
+            txtSteps.BackColor = Color.Honeydew;
             txtSteps.Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtSteps.Location = new Point(358, 178);
+            txtSteps.Location = new Point(21, 417);
             txtSteps.Multiline = true;
             txtSteps.Name = "txtSteps";
             txtSteps.ReadOnly = true;
@@ -142,7 +144,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(358, 155);
+            label5.Location = new Point(21, 394);
             label5.Name = "label5";
             label5.Size = new Size(48, 20);
             label5.TabIndex = 3;
@@ -158,12 +160,39 @@
             label6.TabIndex = 6;
             label6.Text = "Taylor Series Calculator";
             // 
+            // plotView
+            // 
+            plotView.BackColor = Color.Honeydew;
+            plotView.Location = new Point(473, 152);
+            plotView.Name = "plotView";
+            plotView.PanCursor = Cursors.Hand;
+            plotView.Size = new Size(852, 514);
+            plotView.TabIndex = 7;
+            plotView.Text = "plotView1";
+            plotView.ZoomHorizontalCursor = Cursors.SizeWE;
+            plotView.ZoomRectangleCursor = Cursors.SizeNWSE;
+            plotView.ZoomVerticalCursor = Cursors.SizeNS;
+            // 
+            // button1
+            // 
+            button1.FlatAppearance.BorderSize = 0;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Image = (Image)resources.GetObject("button1.Image");
+            button1.Location = new Point(1383, 12);
+            button1.Name = "button1";
+            button1.Size = new Size(50, 50);
+            button1.TabIndex = 8;
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.PaleGreen;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1446, 813);
+            Controls.Add(button1);
+            Controls.Add(plotView);
             Controls.Add(label6);
             Controls.Add(txtSteps);
             Controls.Add(numOrder);
@@ -176,7 +205,6 @@
             Controls.Add(cmbFunction);
             Controls.Add(txtA);
             Controls.Add(txtX);
-            Cursor = Cursors.Arrow;
             FormBorderStyle = FormBorderStyle.None;
             Name = "Form1";
             Text = "Form1";
@@ -199,5 +227,7 @@
         private Label label4;
         private Label label5;
         private Label label6;
+        private OxyPlot.WindowsForms.PlotView plotView;
+        private Button button1;
     }
 }
